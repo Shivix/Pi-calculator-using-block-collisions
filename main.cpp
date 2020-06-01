@@ -1,17 +1,19 @@
 #include <iostream>
 #include <cmath>
-#include "block.h"
+#include "block.hpp"
 
-
-#define DIGITS 1   // Desired number of pi digits
 
 int main() {
     
-    long long collisionCounter = 0;
+    long double collisionCounter = 0;
+    
+    int piDigits;
+    std::cout << "Please enter the desired amount of digits of pi to calculate:";
+    std::cin >> piDigits;
     std::cout << "calculating:" << std::endl;
     
     block block1(50, cvPoint(100, 750), 0, 1);
-    block block2(50, cvPoint(250, 750), -10, pow(100, DIGITS));
+    block block2(50, cvPoint(250, 750), -10, pow(100, piDigits));
     
     cv::Mat background = cv::Mat(800, 800, CV_8UC3, cv::Scalar(255, 255, 255));
     cv::Mat baseBackground = cv::Mat(800, 800, CV_8UC3, cv::Scalar(255, 255, 255));
@@ -20,14 +22,11 @@ int main() {
     
     cvNamedWindow("Main", cv::WINDOW_AUTOSIZE);
     
-    
     background.copyTo(baseBackground);
 
     bool collisions = true;
-    
-    while(true){
-
-
+    while(collisions){
+        
         baseBackground.copyTo(background);
         
         block1.updatePos();
@@ -50,11 +49,11 @@ int main() {
             collisionCounter++;
         }
         if (block1.velocity > 0 && block2.velocity > 0 && block2.velocity > block1.velocity){
-            double output = collisionCounter / pow(10, DIGITS);
-            if(collisions){
-                std::cout << "There were " << collisionCounter << " Collisions \n" << "That means Pi is: " << output;
-                collisions = false;
-            }
+            long double output = collisionCounter / pow(10, piDigits);
+            
+            std::cout << "There were " << collisionCounter << " Collisions \n" << "That means Pi is: " << output;
+            collisions = false;
         }
     }
+    return 0;
 }
